@@ -4,13 +4,16 @@ Project: 4 Pics 1 Word Solution
 Team Members: Huy Pham, Loc Phan, Minh Huynh
 """
 
+if __name__ == "__main__":
+    im = input_image()
+    print solution(im)
 
 """
-Function solution
+Function: solution
 Argument:
-    im - a screenshot of a puzzle from a phone
+    im (3-d numpy array) - a screenshot of a puzzle from a phone
 Return:
-    the solution to the puzzle
+    answer (string) - The solution to the puzzle
     
 Description:
     This function takes an input as an rgb image screenshot
@@ -31,24 +34,85 @@ def solution(im):
     # Generate solutions
     possible_solutions = generate_solutions(possible_words, labels)
 
+"""
+Function: process_image
+Argument:
+    im (3-d numpy array) - a screen shot of a puzzle from a phone
+Return:
+    word_size (int) - the size of the solution word
+    letters (list)  - the 12 letters given by the puzzle
+    pics (list)     - the 4 pictures given by the puzzle
+Description:
+    Extracting word size, letters, and 4 pictures given by the puzzle
+    from the input screenshot image
+"""
 def process_image(im):
     return (None, None, None)
 
+"""
+Function: import_dictionary
+Argument: None
+Return:
+    dictionary (set) - a set of words in a dictionary
+Description:
+    Input a dictionary text file, parse all words in the dictionary
+    to a set, and return the set.
+"""
 def import_dictionary():
     return None
 
+"""
+Function: generate_words
+Argument:
+    dictionary  (set)   - a set of words
+    word_size   (int)   - the size of the solution word
+    letters     (list)  - a list of 12 letters
+Return:
+    possible_words (list) - a list of possible words
+Description:
+    This function generates a list of all possible words that has
+    the size specified by word_size and is a valid English word
+"""
 def generate_words(dictionary, word_size, letters):
     return []
 
+"""
+Function: generate_labels
+Argument:
+    pics (list): list of 4 pictures
+Return:
+    labels (list): list of labels
+Description:
+    This function takes the 4 pictures and makes a request to google cloud service,
+    which returns a json objects containing labels for each picture, then parses
+    the json objects into a list of labels
+"""
 def generate_labels(pics):
     return []
 
+"""
+Function: generate_solutions
+Argument:
+    possible_words (list)   - list of words
+    labels (list)           - list of labels
+Return:
+    solutions (list) - list of solutions
+Description:
+    This function cleverly matches words in possible_words and labels,
+    and return all matches.
+"""
 def generate_solutions(possible_words, labels):
     return []
 
+"""
+Function: input_image
+Argument: None
+Return:
+    im (3-d numpy array) - an in input image
+Description:
+    This function inputs a screenshot of the puzzle and return the input image
+"""
 def input_image():
     return None
 
-if __name__ == "__main__":
-    im = input_image()
-    print solution(im)
+
