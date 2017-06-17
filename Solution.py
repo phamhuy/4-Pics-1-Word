@@ -32,19 +32,22 @@ def solution(im):
     possible_solutions = generate_solutions(possible_words, labels)
 
 def process_image(im):
-    pass
+    return (None, None, None)
 
 def import_dictionary():
-    pass
+    return None
 
 def generate_words(dictionary, word_size, letters):
-    pass
+    return []
+
+def generate_labels(pics):
+    return []
 
 def generate_solutions(possible_words, labels):
-    pass
+    return []
 
 def input_image():
-    pass
+    return None
 
 if __name__ == "__main__":
     im = input_image()
