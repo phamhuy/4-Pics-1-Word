@@ -4,35 +4,6 @@ Project: 4 Pics 1 Word Solution
 Team Members: Huy Pham, Loc Phan, Minh Huynh
 """
 
-if __name__ == "__main__":
-    im = input_image()
-    print solution(im)
-
-"""
-Function: solution
-Argument:
-    im (3-d numpy array) - a screenshot of a puzzle from a phone
-Return:
-    answer (string) - The solution to the puzzle
-    
-Description:
-    This function takes an input as an rgb image screenshot
-    of a puzzle in the game 4-pics-1-word and give a solution
-    to the puzzle
-"""
-def solution(im):
-    # Process image to extract info from the image
-    word_size, letters, pics = process_image(im)
-
-    # Generate words from the word size and the list of letters
-    possible_words = generate_words(word_size, letters)
-
-    # Generate labels from the 4 pics
-    labels = generate_labels(pics)
-
-    # Generate solutions
-    possible_solutions = generate_solutions(possible_words, labels)
-
 """
 Function: process_image
 Argument:
@@ -47,18 +18,6 @@ Description:
 """
 def process_image(im):
     return (None, None, None)
-
-"""
-Function: import_dictionary
-Argument: None
-Return:
-    dictionary (set) - a set of words in a dictionary
-Description:
-    Input a dictionary text file, parse all words in the dictionary
-    to a set, and return the set.
-"""
-def import_dictionary():
-    return None
 
 """
 Function: generate_words
@@ -128,6 +87,31 @@ def generate_solutions(possible_words, labels):
     return []
 
 """
+Function: solution
+Argument:
+    im (3-d numpy array) - a screenshot of a puzzle from a phone
+Return:
+    answer (string) - The solution to the puzzle
+    
+Description:
+    This function takes an input as an rgb image screenshot
+    of a puzzle in the game 4-pics-1-word and give a solution
+    to the puzzle
+"""
+def solution(im):
+    # Process image to extract info from the image
+    word_size, letters, pics = process_image(im)
+
+    # Generate words from the word size and the list of letters
+    possible_words = generate_words(word_size, letters)
+
+    # Generate labels from the 4 pics
+    labels = generate_labels(pics)
+
+    # Generate solutions
+    possible_solutions = generate_solutions(possible_words, labels)
+
+"""
 Function: input_image
 Argument: None
 Return:
@@ -139,3 +123,6 @@ def input_image():
     return None
 
 
+if __name__ == "__main__":
+    im = input_image()
+    print solution(im)
