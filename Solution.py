@@ -73,6 +73,7 @@ Description:
     This function generates a list of all possible words that has
     the size specified by word_size and is a valid English word
 """
+#Loc's
 def generate_words(dictionary, word_size, letters):
     return []
 
