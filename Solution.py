@@ -75,15 +75,30 @@ Description:
 """
 #Loc's
 def generate_words(word_size, letters):
-    #1. Read file from dictionary text
-    with open('English.txt') as f:
-        {int(size): word for line in f for (size, word) in (line.strip().split(None, 1),)}
-    #2. Make a DICTIONARY type base on word size
+    # Read file from dictionary text
+    # Make a DICTIONARY base on word size:
+    f = open('English.txt')
+        dictionary = dict()
+    for line in f:
+        line = line.strip('\n')             #get rid of \n at the end of line
+        if dictionary.has_key(len(line)):        
+            dictionary[len(line)].append(line)
+        else:
+            dictionary[len(line)] = [line]  #the line in [] is important
 
-    #3. Go through the DICTIONARY with same word size, check if the word has
-    #the characters in letters list
-    
-    return []
+    # Go through the DICTIONARY with same word size
+    # Check if the word has the characters in letter list:
+    possible_words = []
+    for word in dictionary[word_size]:
+        for letter in word:
+            if letter not in letters:
+                correct = False
+                break
+            else:            
+                correct = True 
+        if (correct):
+            possible_words.append(word)    
+    return possible_words
 
 
 """
