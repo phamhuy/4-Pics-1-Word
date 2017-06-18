@@ -25,8 +25,7 @@ def solution(im):
     word_size, letters, pics = process_image(im)
 
     # Generate words from the word size and the list of letters
-    dictionary = import_dictionary()
-    possible_words = generate_words(dictionary, word_size, letters)
+    possible_words = generate_words(word_size, letters)
 
     # Generate labels from the 4 pics
     labels = generate_labels(pics)
@@ -73,8 +72,32 @@ Description:
     This function generates a list of all possible words that has
     the size specified by word_size and is a valid English word
 """
-def generate_words(dictionary, word_size, letters):
-    return []
+#Loc's
+def generate_words(word_size, letters):
+    # Read file from dictionary text
+    # Make a DICTIONARY base on word size:
+    f = open('English.txt')
+        dictionary = dict()
+    for line in f:
+        line = line.strip('\n')             #get rid of \n at the end of line
+        if dictionary.has_key(len(line)):        
+            dictionary[len(line)].append(line)
+        else:
+            dictionary[len(line)] = [line]  #the line in [] is important
+
+    # Go through the DICTIONARY with same word size
+    # Check if the word has the characters in letter list:
+    possible_words = []
+    for word in dictionary[word_size]:
+        for letter in word:
+            if letter not in letters:
+                correct = False
+                break
+            else:            
+                correct = True 
+        if (correct):
+            possible_words.append(word)    
+    return possible_words
 
 """
 Function: generate_labels
