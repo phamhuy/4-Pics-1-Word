@@ -63,19 +63,28 @@ def import_dictionary():
 
 """
 Function: generate_words
-Argument:
-    dictionary  (set)   - a set of words
-    word_size   (int)   - the size of the solution word
+Argument:    
+    word_size   (int)   - the size of the solution word 
     letters     (list)  - a list of 12 letters
 Return:
     possible_words (list) - a list of possible words
 Description:
+    dictionary  (list)   - a set of words
     This function generates a list of all possible words that has
     the size specified by word_size and is a valid English word
 """
 #Loc's
-def generate_words(dictionary, word_size, letters):
+def generate_words(word_size, letters):
+    #1. Read file from dictionary text
+    with open('English.txt') as f:
+        {int(size): word for line in f for (size, word) in (line.strip().split(None, 1),)}
+    #2. Make a DICTIONARY type base on word size
+
+    #3. Go through the DICTIONARY with same word size, check if the word has
+    #the characters in letters list
+    
     return []
+
 
 """
 Function: generate_labels
