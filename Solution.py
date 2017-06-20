@@ -113,7 +113,12 @@ Description:
     the json objects into a list of labels
 """
 def generate_labels(pics):
-    return []
+    solutions = []
+    for i in possible_words:
+        for j in labels:
+            if i==j or ((j.replace('ing','')) == i): #included case of V-ing not V-past 
+                solutions.append(i)
+    return solutions
 
 """
 Function: generate_solutions
