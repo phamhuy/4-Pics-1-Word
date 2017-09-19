@@ -6,6 +6,16 @@ Team Members: Huy Pham, Loc Phan, Minh Huynh
 import cv2
 import numpy as np
 from PIL import Image
+from scipy.misc import imresize
+
+def detect_letter(data, im_letter):
+    """ Returns the closest match letter.
+    
+    data -- Trained data containing numpy array of shape (26, 15, 15).
+    im_letter -- A 15x15 binary image of the letter to detect.
+    
+    """
+    return chr(np.argmin(np.sum(np.sum(np.abs(data - im_letter), 1), 1)) + ord('a'))
 
 def find_longest_lines(im):
     """Returns the longests horizontal and vertical lines.
@@ -84,7 +94,7 @@ def extract_word_size(im):
     im_edge = cv2.Canny(im, 50, 100)
     
     # Find indices of the longest horizontal and vertical lines
-    hor_indices, ver_indices, hor_counts, ver_counts = find_longest_lines(im_edge)
+    _, _, _, ver_counts = find_longest_lines(im_edge)
     
     # Average height of the 3 longest vertical lines
     h_avg = np.mean(np.sort(ver_counts)[::-1][:6])
@@ -99,7 +109,25 @@ def extract_letters(im):
     im (grayscale image) -- an image containing letters.
     
     """
-    return []
+    im_edge = cv2.Canny(im, 50, 100)
+    
+    # Find indices of the 6 horizontal lines and 12 vertical lines of the letters
+    hor_indices, ver_indices, _, _ = find_longest_lines(im_edge)
+    hor_lines = sorted(hor_indices[1:7])
+    ver_lines = sorted(ver_indices[:12])
+    
+    # Extract each letter
+    letters = []
+    data = np.load('data.npy')
+    for i in range(2):
+        for j in range(6):
+            im_letter = im[hor_lines[i*3]: hor_lines[i*3 + 1], ver_lines[j*2] : ver_lines[j*2 + 1]]
+            im_letter = imresize(im_letter, (15, 15), 'nearest') > 127
+            im_letter = im_letter.astype(int)
+            letter = chr(np.argmin(np.sum(np.sum(np.abs(data - im_letter), 1), 1)) + ord('a'))
+            letters.append(letter)
+    
+    return letters
 
 def process_image(im):
     """Extracts word size, letters, and 4 pictures from the given image.
@@ -107,7 +135,7 @@ def process_image(im):
     im (RGB image) -- a screen shot of a puzzle from a phone.
     
     """
-    h, w, _ = im.shape
+    h, _, _ = im.shape
     im_gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
     
     # Divide the picture into 3 regions
