@@ -8,15 +8,6 @@ import numpy as np
 from PIL import Image
 from scipy.misc import imresize
 
-def detect_letter(data, im_letter):
-    """ Returns the closest match letter.
-    
-    data -- Trained data containing numpy array of shape (26, 15, 15).
-    im_letter -- A 15x15 binary image of the letter to detect.
-    
-    """
-    return chr(np.argmin(np.sum(np.sum(np.abs(data - im_letter), 1), 1)) + ord('a'))
-
 def find_longest_lines(im):
     """Returns the longests horizontal and vertical lines.
     
@@ -115,18 +106,31 @@ def extract_letters(im):
     hor_indices, ver_indices, _, _ = find_longest_lines(im_edge)
     hor_lines = sorted(hor_indices[1:7])
     ver_lines = sorted(ver_indices[:12])
+    for l in hor_lines:
+        im_edge[l,:] = 255
+    for l in ver_lines:
+        im_edge[:,l] = 255
+    from scipy.misc import imsave
+    imsave('im_edge.png', im_edge)
     
     # Extract each letter
     letters = []
     data = np.load('data.npy')
+    z = 0
     for i in range(2):
         for j in range(6):
             im_letter = im[hor_lines[i*3]: hor_lines[i*3 + 1], ver_lines[j*2] : ver_lines[j*2 + 1]]
+            if True or z == 7 or z == 8:
+                imsave(str(z) + '.png', im_letter)
             im_letter = imresize(im_letter, (15, 15), 'nearest') > 127
             im_letter = im_letter.astype(int)
+            print z
+            z += 1
+            print im_letter
             letter = chr(np.argmin(np.sum(np.sum(np.abs(data - im_letter), 1), 1)) + ord('a'))
             letters.append(letter)
     
+    print 'letters =', letters
     return letters
 
 def process_image(im):
