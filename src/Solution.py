@@ -111,15 +111,16 @@ def extract_letters(im):
     # Extract each letter
     letters = []
     data = np.load('data.npy')
+    z = 0
     for i in range(2):
         for j in range(6):
             im_letter = im[hor_lines[i*3]: hor_lines[i*3 + 1], ver_lines[j*2] : ver_lines[j*2 + 1]]
-            im_letter = imresize(im_letter, (15, 15), 'bicubic') > 100
-            im_letter = im_letter.astype(int)
+            im_letter = imresize(im_letter, (15, 15), 'bicubic') > 75
+#             im_letter = im_letter.astype(int)
             letter = chr(np.argmin(np.sum(np.sum(np.abs(data - im_letter), 1), 1)) + ord('a'))
             letters.append(letter)
-    
-    print 'letters =', letters
+            z += 1
+                
     return letters
 
 
@@ -148,6 +149,10 @@ def process_image(im):
     # Extract the letters
     letters = extract_letters(im3)
     
+    print 'word size =', word_size
+    print 'letters =', letters
+    for i, pic in enumerate(pics):
+        imsave(str(i) + '.png', pic)
 
     return word_size, letters, pics
 
@@ -226,7 +231,7 @@ def solution(im):
 
 def input_image():
     """Returns the RGB image containg the puzzle."""
-    im = cv2.imread('im.png')
+    im = cv2.imread('im7.png')
     return im
 
 
