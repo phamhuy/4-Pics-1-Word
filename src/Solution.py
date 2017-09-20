@@ -122,6 +122,7 @@ def extract_letters(im):
     print 'letters =', letters
     return letters
 
+
 def process_image(im):
     """Extracts word size, letters, and 4 pictures from the given image.
     
