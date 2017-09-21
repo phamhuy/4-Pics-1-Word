@@ -6,6 +6,7 @@ Team Members: Huy Pham, Loc Phan, Minh Huynh
 import cv2
 import numpy as np
 from PIL import Image
+from scipy.misc import imresize, imsave
 
 def find_longest_lines(im):
     """Returns the longests horizontal and vertical lines.
@@ -13,8 +14,13 @@ def find_longest_lines(im):
     im (grayscale image) - an image containing the 4 pictures of the puzzle.
     
     """
-    hor_lines = np.sum(im, 1)
-    ver_lines = np.sum(im, 0)
+    im_edge = cv2.Canny(im, 50, 100)
+    im_edge = imresize(im_edge, (im_edge.shape[0]/2, im_edge.shape[1]/2), 'bicubic')
+
+    hor_lines = np.zeros(im.shape[0], dtype=int)
+    hor_lines[::2] = np.sum(im_edge, 1)
+    ver_lines = np.zeros(im.shape[1], dtype=int)
+    ver_lines[::2] = np.sum(im_edge, 0)
 
     # Sorting
     hor_indices = np.argsort(hor_lines)[::-1]
@@ -30,10 +36,9 @@ def extract_4_pics(im_rgb, im):
     
     """
     _, w = im.shape
-    im_edge = cv2.Canny(im, 50, 50);
     
     # Find indices of the longest horizontal and vertical lines
-    hor_indices, ver_indices, hor_counts, ver_counts = find_longest_lines(im_edge)
+    hor_indices, ver_indices, _, _ = find_longest_lines(im)
 
     # Find the 4 longest horizontal lines
     hor_indices = np.sort(hor_indices[:8])
@@ -81,10 +86,8 @@ def extract_word_size(im):
                             the number of squares is the word size.
     
     """
-    im_edge = cv2.Canny(im, 50, 100)
-    
     # Find indices of the longest horizontal and vertical lines
-    hor_indices, ver_indices, hor_counts, ver_counts = find_longest_lines(im_edge)
+    _, _, _, ver_counts = find_longest_lines(im)
     
     # Average height of the 3 longest vertical lines
     h_avg = np.mean(np.sort(ver_counts)[::-1][:6])
@@ -99,7 +102,27 @@ def extract_letters(im):
     im (grayscale image) -- an image containing letters.
     
     """
-    return []
+    # Find indices of the 6 horizontal lines and 12 vertical lines of the letters
+    hor_indices, ver_indices, _, _ = find_longest_lines(im)
+    hor_lines = sorted(hor_indices[2:8])
+    ver_lines = sorted(ver_indices[:12])
+    im_edge = cv2.Canny(im, 50, 100)
+    
+    # Extract each letter
+    letters = []
+    data = np.load('data.npy')
+    z = 0
+    for i in range(2):
+        for j in range(6):
+            im_letter = im[hor_lines[i*3]: hor_lines[i*3 + 1], ver_lines[j*2] : ver_lines[j*2 + 1]]
+            im_letter = imresize(im_letter, (15, 15), 'bicubic') > 75
+#             im_letter = im_letter.astype(int)
+            letter = chr(np.argmin(np.sum(np.sum(np.abs(data - im_letter), 1), 1)) + ord('a'))
+            letters.append(letter)
+            z += 1
+                
+    return letters
+
 
 def process_image(im):
     """Extracts word size, letters, and 4 pictures from the given image.
@@ -107,7 +130,7 @@ def process_image(im):
     im (RGB image) -- a screen shot of a puzzle from a phone.
     
     """
-    h, w, _ = im.shape
+    h, _, _ = im.shape
     im_gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
     
     # Divide the picture into 3 regions
@@ -126,6 +149,10 @@ def process_image(im):
     # Extract the letters
     letters = extract_letters(im3)
     
+    print 'word size =', word_size
+    print 'letters =', letters
+    for i, pic in enumerate(pics):
+        imsave(str(i) + '.png', pic)
 
     return word_size, letters, pics
 
@@ -204,7 +231,7 @@ def solution(im):
 
 def input_image():
     """Returns the RGB image containg the puzzle."""
-    im = cv2.imread('im.png')
+    im = cv2.imread('im7.png')
     return im
 
 
